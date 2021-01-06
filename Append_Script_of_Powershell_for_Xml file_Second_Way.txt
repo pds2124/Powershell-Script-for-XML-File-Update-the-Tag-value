@@ -1,0 +1,22 @@
+param(
+[string]$Sa,
+[string]$XMLFile
+)
+# this script is used to append "$SA" after the "$XMLFile"
+[xml]$xml =Get-Content $XMLFile
+$b = "!" + $San + "!"
+foreach($item in (Select-XML -Xml $xml -XPath '//Particular_Tag'))
+{
+    $a = $item.Node.InnerXml
+    $CharArr =$a.Split('\')
+    if (($CharArr[2] -match "Match_") -and ($CharArr[3] -notmatch $b))
+    {
+    $item.Node.InnerXml = $CharArr[0] + '\'+$CharArr[1] + '\'+ $CharArr[2] +'\'+ $b + '\'+ $CharArr[3] + '\' + $CharArr[4] 
+    }  
+}
+$xml.Save($XMLFile);
+
+#########
+"This are the second way of appending the XMl file using Powershell Script"
+Match ="This is the word in the tag in which You want to change "
+Particular_Tag = "This is the Particular Tag of the XMLFile in which You want to do change"
