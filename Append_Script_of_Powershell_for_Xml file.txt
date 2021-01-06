@@ -1,16 +1,16 @@
 param(
-[string]$ClientCode,
-[string]$San,
+[string]$CC,
+[string]$Sa,
 [string]$XMLFile
 )
 [xml]$xml =Get-Content $XMLFile
-$b =   $San + "_" + $ClientCode
-# this code is used to append "SAN" before the "Gly" in "XMLFile"
-foreach($item in (Select-XML -Xml $xml -XPath '//object-stream'))
+$b =   $Sa + "_" + $CC
+# this code is used to append "SA" before the "Gly" in "XMLFile"
+foreach($item in (Select-XML -Xml $xml -XPath '//Starting_Tag'))
 {
-    if(($item -match $ClientCode) -and ($item -notmatch $San))
+    if(($item -match $CC) -and ($item -notmatch $Sa))
     {
-    $word = $ClientCode
+    $word = $CC
     $replacement = $b
     $item.Node.InnerXml = $item -replace $word,$replacement
     } 
@@ -18,15 +18,16 @@ foreach($item in (Select-XML -Xml $xml -XPath '//object-stream'))
 }
 foreach($item in (Select-XML -Xml $xml -XPath '//Except_Tag'))
 {
-    if($item -match $ClientCode) 
+    if($item -match $CC) 
     {
     $word = $b
-    $replacement = $ClientCode
+    $replacement = $CC
     $item.Node.InnerText = $item -replace $word,$replacement
     }  
 }
 $xml.Save($XMLFile);
 ###########
+Starting_Tag = "this is the first tag of the XML file."
 $XMLFile ="Parameter"(LOcation of the XML file)
 $Sa ="Parameter"(enter the value you want to append)
 $CC = "Parameter"(enter the common word from the vslue of tag before which you want to append the value)
