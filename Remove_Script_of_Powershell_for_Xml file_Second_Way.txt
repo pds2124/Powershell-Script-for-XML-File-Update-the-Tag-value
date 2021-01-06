@@ -1,0 +1,21 @@
+param(
+[string]$Sa,
+[string]$XMLFile
+)
+# this script is used to remove "SAN" after the "Match"
+[xml]$xml =Get-Content $XMLFile
+$b = "!" + $Sa + "!"
+foreach($item in (Select-XML -Xml $xml -XPath '//Particular_Tag'))
+{
+    $a = $item.Node.InnerXml
+    $CharArr =$a.Split('\')
+    if (($CharArr[2] -match "Match") -and ($CharArr[3] -match $b))
+    {
+    $item.Node.InnerXml = $CharArr[0] + '\'+$CharArr[1] + '\'+ $CharArr[2] + '\'+ $CharArr[4] + '\' + $CharArr[5] + '\' + $CharArr[6]
+    }  
+}
+$xml.Save($XMLFile);
+
+
+########
+"This Code is used to remove the changes done by the second Script "
