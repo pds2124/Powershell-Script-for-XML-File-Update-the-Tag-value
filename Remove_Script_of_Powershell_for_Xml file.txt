@@ -1,0 +1,22 @@
+param(
+[string]$CC,
+[string]$Sa,
+[string]$XMLFile
+)
+[xml]$xml =Get-Content $XMLFile
+$b =   $San + "_" + $ClientCode
+# this code is used to remove "San" before the "Gly" in "XMLFile"
+foreach($item in (Select-XML -Xml $xml -XPath '//Starting_Tag'))
+{
+    if(($item -match $CC) -and ($item -match $Sa))
+    {
+    $word = $b
+    $replacement = $CC
+    $item.Node.InnerXml = $item -replace $word,$replacement
+    write-host($item.Node.InnerXml)
+    } 
+     
+}
+$xml.Save($XMLFile);
+
+#### This Tag is used To Remove all the changes made by Append Script.
